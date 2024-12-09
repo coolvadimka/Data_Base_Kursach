@@ -211,20 +211,7 @@ class QLabelBuddy(QDialog):
                 lamb(zc(delta_a, tp, z1, z2), z1, z2, t),
                 delta(z2, z1, t),
             )
-            # detail.a = a
-            # detail.z2 = z2
-            # detail.t = t
-            # detail.z1 = z1
-            # detail.n1 = n1
-            # detail.j = j
-            # unit.zc = zc
-            # unit.a = lamb
-            # unit.Ky = Ky
-            # unit.Kv = Kv
-            # unit.Ky_v = Ky_v
-            # unit.Km = Km
-            # unit.N = N
-            # unit.delta = delta
+
             unit_guid = str(uuid.uuid4())
             unit = Unit(
                 unit_id=unit_guid,  # или оставьте None, чтобы использовался default
@@ -237,7 +224,6 @@ class QLabelBuddy(QDialog):
                 N=N,
                 delta=delta(z2, z1, t)
             )
-            # unit.Unit_id = str(uuid.uuid4())
             detail = Detail(
                 detail_id=str(uuid.uuid4()),  # Уникальный идентификатор
                 a=a_value,  # Межцентровое расстояние
@@ -247,8 +233,6 @@ class QLabelBuddy(QDialog):
                 j=j,  # Количество рядов звеньев цепи
                 unit_id=unit.Unit_id  # Внешний ключ для связи с Unit
             )
-            # detail.Detail_id = str(uuid.uuid4())
-            # detail.Unit_id = unit.Unit_id
             rq.set_unit(unit)
             rq.set_detail(detail)
 
@@ -263,57 +247,6 @@ class QLabelBuddy(QDialog):
         except Exception as e:
             # Отображение сообщения о других непредвиденных ошибках
             QMessageBox.critical(self, "Непредвиденная ошибка", str(e))
-
-# # Функции расчёта
-# Ky = lambda n1: 10 * ((n1 / 10) ** (1 / 9))
-# Kv = lambda n1: (n1 / 10) ** (2 / 3)
-# Ky_v = lambda n1: max(Ky(n1), Kv(n1))
-# Km = lambda j: [1, 1.7, 2.5, 3][j - 1]
-#
-#
-# def T(delta_a, N, n1, j):
-#     min_t = 30.5 * ((N * Ky_v(n1)) / (n1 * Km(j))) ** (1 / 3)
-#     t_min = delta_a / 80
-#     t_max = delta_a / 30
-#
-#     # Подбор подходящих значений из ГОСТ
-#     t_candidates = [12.7, 15.875, 19.05, 25.4, 31.75, 38.1, 44.45, 50.8]
-#     valid_t = [t for t in t_candidates if t_min <= t <= t_max]
-#     for t in valid_t:
-#         if t >= min_t:
-#             return t
-#
-#     raise ValueError("Нет подходящего значения шага цепи в пределах ГОСТ!")
-#
-#
-# def Z1(n1, t):
-#     table = {
-#         12.7: [2780, 2900, 3000],
-#         15.875: [2000, 2070, 2150],
-#         19.05: [1520, 1580, 1640],
-#         25.4: [1000, 1030, 1070],
-#         31.75: [725, 750, 780],
-#         38.1: [540, 560, 580],
-#         44.45: [430, 445, 460],
-#         50.8: [350, 365, 375],
-#     }
-#
-#     row = table.get(t)
-#     if not row:
-#         raise ValueError(f"Шаг t={t} не найден в таблице")
-#
-#     if n1 < row[0]:
-#         return 20
-#     elif n1 < row[1]:
-#         return 25
-#     else:
-#         return 30
-#
-#
-# zc = lambda delta_a, tp, z1, z2: ((2 * delta_a) / tp) + ((z1 + z2) / 2) + (((z2 - z1) ** 2) * tp) / (40 * delta_a)
-# lamb = lambda zc, z1, z2, t: zc * t - (t * (z1 + z2) / 2)
-# delta = lambda z2, z1, t: (z2 - z1) * t / 6.28
-# a = lambda x, y: (x + ((x**2) - 8 * (y**2)) ** 0.5) / 4
 
 def main():
     init_db()
